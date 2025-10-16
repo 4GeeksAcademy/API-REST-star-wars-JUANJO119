@@ -16,6 +16,16 @@ class User(db.Model):
     favorites_planets: Mapped[list['FavoritePlanet']] = relationship(back_populates='user')
     favorites_starships: Mapped[list['FavoriteStarship']] = relationship(back_populates='user')
 
+    def __repr__(self):
+            return f'Usuario {self.email}'
+    
+    def serialize(self):
+        return{
+             'id': self.id,
+             'email': self.email,
+             'is_active': self.is_active
+        }
+
 
 #Character
 class Character(db.Model):
@@ -26,6 +36,11 @@ class Character(db.Model):
     weigth: Mapped[int] = mapped_column(Integer)
     favorite_by: Mapped[list['FavoriteCharacter']] = relationship(back_populates='character')
 
+    def __repr__(self):
+            return f'Personaje {self.name}'
+    
+    
+
 class FavoriteCharacter(db.Model):
     __tablename__ = 'favorite_characters'
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -34,6 +49,8 @@ class FavoriteCharacter(db.Model):
     user: Mapped['User'] = relationship(back_populates='favorites')
     character: Mapped['Character'] = relationship(back_populates='favorite_by')
 
+    def __repr__(self):
+            return f'Al usuario {self.user_id} le gusta personaje{self.character_id}'
 
 #Planet
 class Planet(db.Model):

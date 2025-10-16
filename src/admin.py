@@ -8,6 +8,7 @@ class UsersModelView(ModelView):
     column_auto_select_related = True
     column_list = ['id', 'email', 'password', 'is_active', 'favorites']
 
+
 #Character
 class CharacterModelView(ModelView):
     column_auto_select_related = True

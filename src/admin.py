@@ -1,7 +1,26 @@
 import os
 from flask_admin import Admin
-from models import db, User
+from models import db, User, Character, FavoriteCharacter
 from flask_admin.contrib.sqla import ModelView
+
+
+class UsersModelView(ModelView):
+    column_auto_select_related = True
+    column_list = ['id', 'email', 'password', 'is_active', 'favorites']
+
+class CharacterModelView(ModelView):
+    column_auto_select_related = True
+    column_list = ['id', 'name', 'height', 'weigth', 'favorite_by']
+
+class FavoriteCharacterModelView(ModelView):
+    column_auto_select_related = True
+    column_list = ['id', 'user_id', 'character_id', 'user', 'character']
+
+
+
+
+
+
 
 def setup_admin(app):
     app.secret_key = os.environ.get('FLASK_APP_KEY', 'sample key')
@@ -10,7 +29,9 @@ def setup_admin(app):
 
     
     # Add your models here, for example this is how we add a the User model to the admin
-    admin.add_view(ModelView(User, db.session))
+    admin.add_view(UsersModelView(User, db.session))
+    admin.add_view(CharacterModelView(Character, db.session))
+    admin.add_view(FavoriteCharacterModelView(FavoriteCharacter, db.session))
 
     # You can duplicate that line to add mew models
     # admin.add_view(ModelView(YourModelName, db.session))

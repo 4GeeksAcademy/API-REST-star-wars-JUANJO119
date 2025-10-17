@@ -50,10 +50,43 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@app.route('/user', methods=['POST'])
+def add_user():
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Envia informacion'}), 400
+    if 'email' not in body:
+        return jsonify({'msg': 'Campo email ogligatorio'}), 400
+    if 'password' not in body:
+        return jsonify({'msg': 'Campo password ogligatorio'}), 400
+    
+    #print(body)
+    new_user = User()
+    new_user.email = body['email']
+    new_user.password = body['password']
+    new_user.is_active = True
+    #print(new_user)
+    #print(type(new_user))
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'msg': 'Usuario registrado', 'user': new_user.serialize()}), 200
 
 
-
-
+@app.route('/user_favorites/<int:user_id>', methods=['GET'])
+def get_favorites(user_id):
+    user = User.query.get(user_id)
+    print(user)
+    if user is None:
+        return jsonify({'msg': f'El usuario con id {user_id} no existe'}), 404
+    #print(user.favorites)
+    #print(f'El email del usuarios es {user.email}')
+    registros_favoritos = user.favorites
+    #print(registros_favoritos[0].character.serialize())
+    favorite_characters_serialized = []
+    for registro in registros_favoritos:
+        character = registro.character.serialize()
+        favorite_characters_serialized.append(character)
+    return jsonify({'msg': 'Todo salió bien', 'user': user.serialize() ,'favorite_characters': favorite_characters_serialized}), 200    
 
 
 

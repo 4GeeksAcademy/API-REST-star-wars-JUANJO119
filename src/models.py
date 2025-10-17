@@ -26,7 +26,6 @@ class User(db.Model):
              'is_active': self.is_active
         }
 
-
 #Character
 class Character(db.Model):
     __tablename__ = 'characters'
@@ -39,7 +38,12 @@ class Character(db.Model):
     def __repr__(self):
             return f'Personaje {self.name}'
     
-    
+    def serialize(self):
+        return{
+             'name': self.name,
+             'height': self.height,
+             'weigth': self.weigth
+        }
 
 class FavoriteCharacter(db.Model):
     __tablename__ = 'favorite_characters'
@@ -61,6 +65,9 @@ class Planet(db.Model):
     climate: Mapped[str] = mapped_column(String(120))
     favorite_by: Mapped[list['FavoritePlanet']] = relationship(back_populates='planet')
 
+
+
+
 class FavoritePlanet(db.Model):
     __tablename__ = 'favorite_planets'
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -68,6 +75,9 @@ class FavoritePlanet(db.Model):
     planet_id: Mapped[int] = mapped_column(ForeignKey('planets.id'))
     user: Mapped['User'] = relationship(back_populates='favorites_planets')
     planet: Mapped['Planet'] = relationship(back_populates='favorite_by')
+
+
+    
 
 #Starship
 class Starship(db.Model):

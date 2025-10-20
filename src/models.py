@@ -65,8 +65,15 @@ class Planet(db.Model):
     climate: Mapped[str] = mapped_column(String(120))
     favorite_by: Mapped[list['FavoritePlanet']] = relationship(back_populates='planet')
 
-
-
+    def __repr__(self):
+            return f'Planeta {self.name}'
+    
+    def serialize(self):
+        return{
+             'name': self.name,
+             'population': self.population,
+             'climate': self.climate
+        }
 
 class FavoritePlanet(db.Model):
     __tablename__ = 'favorite_planets'
@@ -76,7 +83,8 @@ class FavoritePlanet(db.Model):
     user: Mapped['User'] = relationship(back_populates='favorites_planets')
     planet: Mapped['Planet'] = relationship(back_populates='favorite_by')
 
-
+    def __repr__(self):
+            return f'Al usuario {self.user_id} le gusta el planeta{self.planet_id}'
     
 
 #Starship
@@ -88,6 +96,16 @@ class Starship(db.Model):
     manufacturer: Mapped[str] = mapped_column(String(120))
     favorite_by: Mapped[list['FavoriteStarship']] = relationship(back_populates='starship')
 
+    def __repr__(self):
+            return f'Starship {self.name}'
+    
+    def serialize(self):
+        return{
+             'name': self.name,
+             'model': self.model,
+             'manufacturer': self.manufacturer
+        }
+
 class FavoriteStarship(db.Model):
     __tablename__ = 'favorite_starships'
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -95,3 +113,6 @@ class FavoriteStarship(db.Model):
     starship_id: Mapped[int] = mapped_column(ForeignKey('starships.id'))
     user: Mapped['User'] = relationship(back_populates='favorites_starships')
     starship: Mapped['Starship'] = relationship(back_populates='favorite_by')
+
+    def __repr__(self):
+            return f'Al usuario {self.user_id} le gusta la starship{self.starship_id}'

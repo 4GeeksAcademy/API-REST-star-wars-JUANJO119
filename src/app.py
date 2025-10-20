@@ -83,7 +83,7 @@ def get_favorites(user_id):
         favorite_characters_serialized.append(character)
     return jsonify({'msg': 'Todo salió bien', 'user': user.serialize() ,'favorite_characters': favorite_characters_serialized}), 200    
 
-#dime los planetas favoritos de usuarios segun id
+
 
 
 

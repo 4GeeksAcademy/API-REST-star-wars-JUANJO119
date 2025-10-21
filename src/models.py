@@ -54,7 +54,7 @@ class FavoriteCharacter(db.Model):
     character: Mapped['Character'] = relationship(back_populates='favorite_by')
 
     def __repr__(self):
-            return f'Al usuario {self.user_id} le gusta personaje{self.character_id}'
+            return f'Al usuario {self.user_id} le gusta personaje {self.character_id}'
 
 #Planet
 class Planet(db.Model):
@@ -84,7 +84,7 @@ class FavoritePlanet(db.Model):
     planet: Mapped['Planet'] = relationship(back_populates='favorite_by')
 
     def __repr__(self):
-            return f'Al usuario {self.user_id} le gusta el planeta{self.planet_id}'
+            return f'Al usuario {self.user_id} le gusta el planeta {self.planet_id}'
     
 
 #Starship
@@ -115,4 +115,4 @@ class FavoriteStarship(db.Model):
     starship: Mapped['Starship'] = relationship(back_populates='favorite_by')
 
     def __repr__(self):
-            return f'Al usuario {self.user_id} le gusta la starship{self.starship_id}'
+            return f'Al usuario {self.user_id} le gusta la starship {self.starship_id}'

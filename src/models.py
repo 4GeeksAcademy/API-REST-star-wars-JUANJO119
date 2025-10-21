@@ -12,7 +12,7 @@ class User(db.Model):
     password: Mapped[str] = mapped_column(String(80), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False)
     
-    favorites: Mapped[list['FavoriteCharacter']] = relationship(back_populates='user')
+    favorites_characters: Mapped[list['FavoriteCharacter']] = relationship(back_populates='user')
     favorites_planets: Mapped[list['FavoritePlanet']] = relationship(back_populates='user')
     favorites_starships: Mapped[list['FavoriteStarship']] = relationship(back_populates='user')
 
@@ -50,7 +50,7 @@ class FavoriteCharacter(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
     character_id: Mapped[int] = mapped_column(ForeignKey('characters.id'))
-    user: Mapped['User'] = relationship(back_populates='favorites')
+    user: Mapped['User'] = relationship(back_populates='favorites_characters')
     character: Mapped['Character'] = relationship(back_populates='favorite_by')
 
     def __repr__(self):

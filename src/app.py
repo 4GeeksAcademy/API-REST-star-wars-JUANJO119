@@ -75,39 +75,18 @@ def add_user():
 @app.route('/user_favorites/<int:user_id>', methods=['GET'])
 def get_favorites(user_id):
     user = User.query.get(user_id)
-    #print(user)
     if user is None:
         return jsonify({'msg': f'El usuario con id {user_id} no existe'}), 404
-    
-    registros_favoritos = user.favorites
-    
-    favorite_characters_serialized = []
-    favorite_planets_serialized = []
-    favorite_starships_serialized = [] 
-
-    for registro in registros_favoritos:
-        if registro.character:
-            character = registro.character.serialize()
-            favorite_characters_serialized.append(character)
-        
-        if registro.planet:
-            planet = registro.planet.serialize()
-            favorite_planets_serialized.append(planet)
-            
-        if registro.starship:
-            starship = registro.starship.serialize()
-            favorite_starships_serialized.append(starship) 
 
     return jsonify({
-        'msg': 'Todo salió bien', 
-        'user': user.serialize(), 
-        'favorite_characters': favorite_characters_serialized,
-        'favorite_planets': favorite_planets_serialized,
-        'favorite_starships': favorite_starships_serialized
+        'user': user.serialize(),
+        'favorites_characters': [fav.character.serialize() for fav in user.favorites_characters],
+        'favorites_planets': [fav.planet.serialize() for fav in user.favorites_planets],
+        'favorites_starships': [fav.starship.serialize() for fav in user.favorites_starships]
     }), 200   
 
 
-# Añadir personaje favorito
+# Añade personaje favorito
 @app.route('/user/<int:user_id>/favorite/character/<int:character_id>', methods=['POST'])
 def add_favorite_character(user_id, character_id):
     user = User.query.get(user_id)
@@ -126,7 +105,7 @@ def add_favorite_character(user_id, character_id):
     return jsonify({'msg': 'Personaje agregado a favoritos'}), 200
 
 
-# Eliminar personaje favorito
+# Elimina personaje favorito
 @app.route('/user/<int:user_id>/favorite/character/<int:character_id>', methods=['DELETE'])
 def delete_favorite_character(user_id, character_id):
     favorite = FavoriteCharacter.query.filter_by(user_id=user_id, character_id=character_id).first()
@@ -138,7 +117,7 @@ def delete_favorite_character(user_id, character_id):
     return jsonify({'msg': 'Personaje eliminado de favoritos'}), 200
 
 
-# Añadir planeta favorito
+# Añade planeta favorito
 @app.route('/user/<int:user_id>/favorite/planet/<int:planet_id>', methods=['POST'])
 def add_favorite_planet(user_id, planet_id):
     user = User.query.get(user_id)
@@ -157,7 +136,7 @@ def add_favorite_planet(user_id, planet_id):
     return jsonify({'msg': 'Planeta agregado a favoritos'}), 200
 
 
-# Eliminar planeta favorito
+# Elimina planeta favorito
 @app.route('/user/<int:user_id>/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def delete_favorite_planet(user_id, planet_id):
     favorite = FavoritePlanet.query.filter_by(user_id=user_id, planet_id=planet_id).first()
@@ -169,7 +148,7 @@ def delete_favorite_planet(user_id, planet_id):
     return jsonify({'msg': 'Planeta eliminado de favoritos'}), 200
 
 
-# Añadir nave favorita
+# Añade nave favorita
 @app.route('/user/<int:user_id>/favorite/starship/<int:starship_id>', methods=['POST'])
 def add_favorite_starship(user_id, starship_id):
     user = User.query.get(user_id)
@@ -188,7 +167,7 @@ def add_favorite_starship(user_id, starship_id):
     return jsonify({'msg': 'Nave agregada a favoritos'}), 200
 
 
-# Eliminar nave favorita
+# Elimina nave favorita
 @app.route('/user/<int:user_id>/favorite/starship/<int:starship_id>', methods=['DELETE'])
 def delete_favorite_starship(user_id, starship_id):
     favorite = FavoriteStarship.query.filter_by(user_id=user_id, starship_id=starship_id).first()
@@ -198,10 +177,6 @@ def delete_favorite_starship(user_id, starship_id):
     db.session.delete(favorite)
     db.session.commit()
     return jsonify({'msg': 'Nave eliminada de favoritos'}), 200
-
-
-
-
 
 
 #trae todos los personajes
@@ -306,13 +281,6 @@ def add_starship():
     db.session.add(new_starship)
     db.session.commit()
     return jsonify({'msg': 'Nave registrada', 'starship': new_starship.serialize()}), 200
-
-
-
-
-
-
-
 
 
 # this only runs if `$ python src/app.py` is executed

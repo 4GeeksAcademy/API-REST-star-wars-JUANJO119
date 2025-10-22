@@ -282,6 +282,28 @@ def add_starship():
     db.session.commit()
     return jsonify({'msg': 'Nave registrada', 'starship': new_starship.serialize()}), 200
 
+#modifica personajes
+@app.route('/character/<int:character_id>', methods=['PUT'])
+def update_character(character_id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Envia información'}), 400
+
+    character = Character.query.get(character_id)
+    if character is None:
+        return jsonify({'msg': f'El personaje con id {character_id} no existe'}), 404
+
+    character.name = body.get('name', character.name)
+    character.height = body.get('height', character.height)
+    character.weigth = body.get('weigth', character.weigth)
+
+    db.session.commit()
+    return jsonify({'msg': 'Personaje actualizado', 'character': character.serialize()}), 200
+
+
+
+
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':

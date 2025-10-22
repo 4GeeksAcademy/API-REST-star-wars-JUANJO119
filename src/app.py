@@ -282,7 +282,7 @@ def add_starship():
     db.session.commit()
     return jsonify({'msg': 'Nave registrada', 'starship': new_starship.serialize()}), 200
 
-#modifica personajes
+#modifica personaje
 @app.route('/character/<int:character_id>', methods=['PUT'])
 def update_character(character_id):
     body = request.get_json(silent=True)
@@ -300,7 +300,16 @@ def update_character(character_id):
     db.session.commit()
     return jsonify({'msg': 'Personaje actualizado', 'character': character.serialize()}), 200
 
+#elimina personaje
+@app.route('/character/<int:character_id>', methods=['DELETE'])
+def delete_character(character_id):
+    character = Character.query.get(character_id)
+    if character is None:
+        return jsonify({'msg': f'El personaje con id {character_id} no existe'}), 404
 
+    db.session.delete(character)
+    db.session.commit()
+    return jsonify({'msg': 'Personaje eliminado correctamente'}), 200
 
 
 

@@ -312,6 +312,64 @@ def delete_character(character_id):
     return jsonify({'msg': 'Personaje eliminado correctamente'}), 200
 
 
+#modifica planeta
+@app.route('/planet/<int:planet_id>', methods=['PUT'])
+def update_planet(planet_id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Envia información'}), 400
+
+    planet = Planet.query.get(planet_id)
+    if planet is None:
+        return jsonify({'msg': f'El planeta con id {planet_id} no existe'}), 404
+
+    planet.name = body.get('name', planet.name)
+    planet.population = body.get('population', planet.population)
+    planet.climate = body.get('climate', planet.climate)
+
+    db.session.commit()
+    return jsonify({'msg': 'Planeta actualizado', 'planet': planet.serialize()}), 200
+
+#elimina planeta
+@app.route('/planet/<int:planet_id>', methods=['DELETE'])
+def delete_planet(planet_id):
+    planet = Planet.query.get(planet_id)
+    if planet is None:
+        return jsonify({'msg': f'El planeta con id {planet_id} no existe'}), 404
+
+    db.session.delete(planet)
+    db.session.commit()
+    return jsonify({'msg': 'Planeta eliminado correctamente'}), 200
+
+#modifica nave
+@app.route('/starship/<int:starship_id>', methods=['PUT'])
+def update_starship(starship_id):
+    body = request.get_json(silent=True)
+    if body is None:
+        return jsonify({'msg': 'Envia información'}), 400
+
+    starship = Starship.query.get(starship_id)
+    if starship is None:
+        return jsonify({'msg': f'La nave con id {starship_id} no existe'}), 404
+
+    starship.name = body.get('name', starship.name)
+    starship.model = body.get('model', starship.model)
+    starship.manufacturer = body.get('manufacturer', starship.manufacturer)
+
+    db.session.commit()
+    return jsonify({'msg': 'Nave actualizada', 'starship': starship.serialize()}), 200
+
+#elimina nave
+@app.route('/starship/<int:starship_id>', methods=['DELETE'])
+def delete_starship(starship_id):
+    starship = Starship.query.get(starship_id)
+    if starship is None:
+        return jsonify({'msg': f'La nave con id {starship_id} no existe'}), 404
+
+    db.session.delete(starship)
+    db.session.commit()
+    return jsonify({'msg': 'Nave eliminada correctamente'}), 200
+
 
 
 # this only runs if `$ python src/app.py` is executed
